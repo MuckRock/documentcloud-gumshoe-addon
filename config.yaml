@@ -1,8 +1,5 @@
-# The title is the title of your Add-On
-title: Hello World
-# The description will be shown above the form when activating the Add-On
-description: This is an updated simple test add-on
-# Top level type should always be object
+title: Gumshoe
+description: Use a machine learning model to help pick out the relevant documents from a collection
 type: object
 # How does this add-on accept documents
 # If more than one type is specified, the user will be prompted to choose one
@@ -13,11 +10,15 @@ documents:
   - selected
 # Properties are the fields for your form
 properties:
-  # the key is the name of the variable that will be returned to your code
-  name:
-    # the title is what will be shown as the form label
-    title: Name
-    # a string is text
+  relevant:
+    title: Relevant Keywords
     type: string
+  irrelevant:
+    title: Irrelevant Keywords
+    type: string
+  email:
+    title: Email
+    type: string
+    format: email
 
 

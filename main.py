@@ -1,38 +1,41 @@
 """
-This is a hello world add-on for DocumentCloud.
+This is the Gumshoe add-on for DocumentCloud.
 
-It demonstrates how to write a add-on which can be activated from the
-DocumentCloud add-on system and run using Github Actions.  It receives data
-from DocumentCloud via the request dispatch and writes data back to
-DocumentCloud using the standard API
+It runs the Gumshoe machine learning model on a collection of DocumentCloud
+documents
 """
 
+import requests
 from documentcloud.addon import AddOn
 
+URL = "https://us-central1-gumshoe-muckrock-0ce3.cloudfunctions.net/gumshoe3"
 
-class HelloWorld(AddOn):
-    """An example Add-On for DocumentCloud."""
 
+class Gumshoe(AddOn):
     def main(self):
-        """The main add-on functionality goes here."""
         # fetch your add-on specific data
-        name = self.data.get("name", "world")
+        relevant = self.data.get("relevant", "")
+        irrelevant = self.data.get("irrelevant", "")
+        email = self.data.get("email", "")
 
-        self.set_message("Hello World start!")
+        document_ids = [d.id for d in self.get_documents()]
 
-        # add a hello note to the first page of each selected document
-        for document in self.get_documents():
-            # get_documents will iterate through all documents efficiently,
-            # either selected or by query, dependeing on which is passed in
-            document.annotations.create(f"Hello {name}!", 0)
+        resp = requests.post(
+            URL,
+            json={
+                "doc_cloud_ids": document_ids,
+                "doc_cloud_token": self.client.refresh_token,
+                "relevant_keywords": relevant,
+                "irrelevant_keywrods": irrelevant,
+                "email": email,
+            },
+        )
 
-        with open("hello.txt", "w+") as file_:
-            file_.write("Hello world!")
-            self.upload_file(file_)
+        if resp.status_code != 200:
+            self.set_message("Error submitting request")
 
-        self.set_message("Hello World end!")
-        self.send_mail("Hello World!", "We finished!")
+        self.set_message("Request submitted, please wait for the request to process")
 
 
 if __name__ == "__main__":
-    HelloWorld().main()
+    Gumshoe().main()
