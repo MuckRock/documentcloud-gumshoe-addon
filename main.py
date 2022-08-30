@@ -26,7 +26,7 @@ class Gumshoe(AddOn):
                 "doc_cloud_ids": document_ids,
                 "doc_cloud_token": self.client.refresh_token,
                 "relevant_keywords": relevant,
-                "irrelevant_keywrods": irrelevant,
+                "irrelevant_keywords": irrelevant,
                 "email": email,
             },
         )
