@@ -33,6 +33,7 @@ class Gumshoe(AddOn):
         irrelevant = self.data.get("irrelevant", "")
         email = self.data.get("email", "")
         run_id = self.id
+        print("run id", run_id)
 
         document_ids = [d.id for d in self.get_documents()]
 
